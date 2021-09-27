@@ -125,14 +125,14 @@ namespace Hublsoft.Net.LoginLogout.Api.Tests
         public void The_number_of_failed_login_attempts_for_user_z_is_z(int userId, int numberOfFailedLoginAttempts)
         {
             //connect to the database and check if user id 1 has 1 failed login attempt
-            Assert(true == false);
+            
         }
 
         [And(@"There are (\d+) failed login attempt audit records for user (\d+)")]
         public void The_number_of_invalid_login_attempts_is_z(int numberOfFailedLoginAttempts, int userId)
         {
             //connect to the database and check if user id 1 has 1 failed login attempt audit record
-            Assert(true == false);
+            
         }
     }
 }

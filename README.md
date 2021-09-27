@@ -185,4 +185,4 @@ The 4th feature test requires me to implement the database and the data access a
 
 - Run the script called "Setup and populate LoginLogout database.sql"
 
-To be able to connect to the MySql database run `dotnet add package MySqlConnector`
+To be able to connect to the MySql database run `dotnet add package MySql.Data`
