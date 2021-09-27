@@ -101,10 +101,38 @@ namespace Hublsoft.Net.LoginLogout.Api.Tests
             catch { }
         }
 
+        [When(@"I post a request to authenticate with a valid email address and a valid but incorrect password")]
+        public async Task I_post_a_request_to_authenticate_with_a_valid_email_address_and_a_valid_but_incorrect_password()
+        {
+            var payload = "{\"emailaddress\":\"test@test.com\",\"password\":\"password\"}";
+            var content = new StringContent(payload, Encoding.UTF8, "application/json");
+            _response = null;
+
+            try
+            {
+                _response = await _client.PostAsync("/api/v1.0/user/authenticate", content);
+            }
+            catch { }
+        }
+
         [Then(@"I expect to receive a (\d+) response")]
         public void I_expect_to_receive_a_z_response(int httpStatusCode)
         {
             ((int)_response.StatusCode).Should().Be(httpStatusCode);
+        }
+
+        [And(@"The number of failed login attempts for user (\d+) is (\d+)")]
+        public void The_number_of_failed_login_attempts_for_user_z_is_z(int userId, int numberOfFailedLoginAttempts)
+        {
+            //connect to the database and check if user id 1 has 1 failed login attempt
+            Assert(true == false);
+        }
+
+        [And(@"There are (\d+) failed login attempt audit records for user (\d+)")]
+        public void The_number_of_invalid_login_attempts_is_z(int numberOfFailedLoginAttempts, int userId)
+        {
+            //connect to the database and check if user id 1 has 1 failed login attempt audit record
+            Assert(true == false);
         }
     }
 }

@@ -180,3 +180,9 @@ I added the following authentication method:
 - The xml comments help build the swagger documentation
 
 The Authenticate method has been stubbed out to return a new guid - this will be replaced as more tests are added.
+
+The 4th feature test requires me to implement the database and the data access and bll projects because I need to check it for the number of failed login attempts. This will mean that I need to add some unit tests as well. This all needs to be done from the "bottom upwards".
+
+- Run the script called "Setup and populate LoginLogout database.sql"
+
+To be able to connect to the MySql database run `dotnet add package MySqlConnector`
