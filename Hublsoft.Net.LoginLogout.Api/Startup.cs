@@ -49,6 +49,8 @@ namespace Hublsoft.Net.LoginLogout.Api
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Hublsoft.Net.LoginLogout.Api", Version = "v1" });
             });
             services.AddSwaggerExamplesFromAssemblies(Assembly.GetEntryAssembly());
+
+            services.AddTransient<MySqlConnection>(_ => new MySqlConnection(Configuration["ConnectionStrings:Default"]));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
