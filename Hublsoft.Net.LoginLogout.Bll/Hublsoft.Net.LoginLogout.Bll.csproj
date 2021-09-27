@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\Hublsoft.Net.LoginLogout.DataAccess\Hublsoft.Net.LoginLogout.DataAccess.csproj" />
+    <ProjectReference Include="..\Hublsoft.Net.LoginLogout.Shared\Hublsoft.Net.LoginLogout.Shared.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+</Project>
