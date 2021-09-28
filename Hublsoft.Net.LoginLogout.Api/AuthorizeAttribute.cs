@@ -3,12 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Hublsoft.Net.LoginLogout.Api
 {
-    #pragma warning disable 1591
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
     public class AuthorizeAttribute : Attribute, IAuthorizationFilter
     {
@@ -23,5 +20,4 @@ namespace Hublsoft.Net.LoginLogout.Api
             }
         }
     }
-    #pragma warning restore 1591
 }

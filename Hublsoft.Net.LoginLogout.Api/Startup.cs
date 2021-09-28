@@ -1,29 +1,21 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.IO;
-using System.Text;
-using System.Text.Json.Serialization;
 using Hublsoft.Net.LoginLogout.DataAccess;
 using Hublsoft.Net.LoginLogout.Bll;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Hublsoft.Net.LoginLogout.Api
 {
-    #pragma warning disable 1591
+    [ExcludeFromCodeCoverage]
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -88,5 +80,4 @@ namespace Hublsoft.Net.LoginLogout.Api
             });
         }
     }
-    #pragma warning restore 1591
 }

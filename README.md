@@ -203,3 +203,53 @@ Now to get the DataAccess project ready:
 `cd Hublsoft.Net.LoginLogout.DataAccess`
 `dotnet add package Microsoft.Extensions.Options`
 `dotnet add package MySql.Data`
+
+
+### BLL.Tests project
+
+Now to get the Bll.Tests project ready: 
+
+`cd Hublsoft.Net.LoginLogout.Bll.Tests`
+`dotnet add package Microsoft.NET.Test.Sdk`
+`dotnet add package xunit`
+`dotnet add package xunit.runner.visualstudio`
+`dotnet add package coverlet.collector`
+`dotnet add package FluentAssertions`
+`dotnet add package Moq`
+
+
+### DataAccess.Tests project
+
+Now to get the DataAccess.Tests project ready: 
+
+`cd Hublsoft.Net.LoginLogout.DataAccess.Tests`
+`dotnet add package Microsoft.NET.Test.Sdk`
+`dotnet add package xunit`
+`dotnet add package xunit.runner.visualstudio`
+`dotnet add package coverlet.collector`
+`dotnet add package FluentAssertions`
+`dotnet add package Moq`
+
+
+### Unit test coverage
+
+To generate code coverage lcov.info files from the unit tests which can be visualised in VS Code,
+- install coverage-gutters extension to VSCode
+- install .NET Core Test Explorer to VSCode
+  - `dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=./lcov.info .\Hublsoft.Net.LoginLogout.Api.Tests`
+  - `dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=./lcov.info .\Hublsoft.Net.LoginLogout.Bll.Tests`
+  - `dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=./lcov.info .\Hublsoft.Net.LoginLogout.DataAccess.Tests`
+  - `dotnet watch --project .\Hublsoft.Net.LoginLogout.Api.Tests test /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=./lcov.info`
+  - `dotnet watch --project .\Hublsoft.Net.LoginLogout.Bll.Tests test /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=./lcov.info`
+  - `dotnet watch --project .\Hublsoft.Net.LoginLogout.DataAccess.Tests test /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=./lcov.info`
+To generate cobertura xml code coverage reports, go in to each test folder and run `dotnet test --collect:"XPlat Code Coverage"`
+Follow instructions from [unit testing code coverage guide](https://docs.microsoft.com/en-us/dotnet/core/testing/unit-testing-code-coverage?tabs=windows)
+To view the report generated run the following:
+`dotnet tool install -g dotnet-reportgenerator-globaltool`
+From the output coverage.cobertura.xml file from the previous tests, run: `reportgenerator -reports:"Path\To\TestProject\TestResults\{guid}\coverage.cobertura.xml" -targetdir:"coveragereport" -reporttypes:Html`
+
+`reportgenerator -reports:"C:\Projects\Training\Hublsoft\LoginLogout\Hublsoft.Net.LoginLogout.Api.Tests\TestResults\ab488977-ca59-4a61-a723-c8cfe3689326\coverage.cobertura.xml" -targetdir:"coveragereport" -reporttypes:Html`
+
+`reportgenerator -reports:"C:\Projects\Training\Hublsoft\LoginLogout\Hublsoft.Net.LoginLogout.Bll.Tests\TestResults\188e1edb-c6ac-4128-b33e-1a969f1df069\coverage.cobertura.xml" -targetdir:"coveragereport" -reporttypes:Html`
+
+`reportgenerator -reports:"C:\Projects\Training\Hublsoft\LoginLogout\Hublsoft.Net.LoginLogout.DataAccess.Tests\TestResults\ac3a8384-0ef7-4c13-97aa-106810a59c75\coverage.cobertura.xml" -targetdir:"coveragereport" -reporttypes:Html`

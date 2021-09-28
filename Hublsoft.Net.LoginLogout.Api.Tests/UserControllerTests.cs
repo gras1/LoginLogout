@@ -3,22 +3,13 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
-using MySql;
-using MySql.Data;
 using MySql.Data.MySqlClient;
-using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Linq;
-using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using Xunit;
 using Xunit.Gherkin.Quick;
-using Hublsoft.Net.LoginLogout.DataAccess;
 
 namespace Hublsoft.Net.LoginLogout.Api.Tests
 {
@@ -30,6 +21,8 @@ namespace Hublsoft.Net.LoginLogout.Api.Tests
         private HttpClient _client;
         private HttpResponseMessage _response;
         private readonly string _dbConnectionString;
+        private static string IncorrectHashedPassword = "$2a$12$p3gGhR1iGQDPaUF4vygnwOEJsvt/r5xo7hgyA6hxJW9DZvdX/JXUK";
+        private static string ValidHashedPassword = "$2a$12$jZFwONJ.lkBoR/WEv9vDeuXvZ0q3AvOoeiXtp.N5beBENapOE/Gja";
 
         public UserControllerTests()
         {
@@ -75,7 +68,7 @@ namespace Hublsoft.Net.LoginLogout.Api.Tests
         [When(@"I post a request to authenticate with a valid email address and password")]
         public async Task I_post_a_request_to_authenticate_with_a_valid_email_address_and_password()
         {
-            var payload = "{\"emailaddress\":\"test@test.com\",\"password\":\"test\"}";
+            var payload = "{\"emailaddress\":\"test@test.com\",\"password\":\"" + ValidHashedPassword + "\"}";
             var content = new StringContent(payload, Encoding.UTF8, "application/json");
             _response = null;
 
@@ -89,7 +82,7 @@ namespace Hublsoft.Net.LoginLogout.Api.Tests
         [When(@"I post a request to authenticate with an invalid email address and valid password")]
         public async Task I_post_a_request_to_authenticate_with_an_invalid_email_address_and_valid_password()
         {
-            var payload = "{\"emailaddress\":\"\",\"password\":\"test\"}";
+            var payload = "{\"emailaddress\":\"\",\"password\":\"" + ValidHashedPassword + "\"}";
             var content = new StringContent(payload, Encoding.UTF8, "application/json");
             _response = null;
 
@@ -117,7 +110,7 @@ namespace Hublsoft.Net.LoginLogout.Api.Tests
         [When(@"I post a request to authenticate with a valid email address and a valid but incorrect password")]
         public async Task I_post_a_request_to_authenticate_with_a_valid_email_address_and_a_valid_but_incorrect_password()
         {
-            var payload = "{\"emailaddress\":\"test@test.com\",\"password\":\"password\"}";
+            var payload = "{\"emailaddress\":\"test@test.com\",\"password\":\"" + IncorrectHashedPassword + "\"}";
             var content = new StringContent(payload, Encoding.UTF8, "application/json");
             _response = null;
 
@@ -135,7 +128,7 @@ namespace Hublsoft.Net.LoginLogout.Api.Tests
             {
                 await con.OpenAsync();
 
-                string stm = $"DELETE FROM RegisteredUserAudits WHERE Id > 2 ;";
+                var stm = $"DELETE FROM RegisteredUserAudits WHERE Id > 2 ;";
 
                 using (var cmd = new MySqlCommand(stm, con))
                 {
@@ -175,7 +168,7 @@ namespace Hublsoft.Net.LoginLogout.Api.Tests
             {
                 await con.OpenAsync();
 
-                string stm = $"SET SESSION TRANSACTION ISOLATION LEVEL READ UNCOMMITTED ; SELECT FailedLoginAttempts FROM RegisteredUsers WHERE Id = {userId} LIMIT 1 ; SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ ;";
+                var stm = $"SET SESSION TRANSACTION ISOLATION LEVEL READ UNCOMMITTED ; SELECT FailedLoginAttempts FROM RegisteredUsers WHERE Id = {userId} LIMIT 1 ; SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ ;";
 
                 using (var cmd = new MySqlCommand(stm, con))
                 {
@@ -207,7 +200,7 @@ namespace Hublsoft.Net.LoginLogout.Api.Tests
             {
                 await con.OpenAsync();
 
-                string stm = $"SET SESSION TRANSACTION ISOLATION LEVEL READ UNCOMMITTED ; SELECT COUNT(Id) AS NumberOfFailedLoginAttemptAuditRecords, StatusBefore, StatusAfter FROM RegisteredUserAudits WHERE RegisteredUserId = {userId} AND Activity = 'Failed login attempt' LIMIT 1 ; SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ ;";
+                var stm = $"SET SESSION TRANSACTION ISOLATION LEVEL READ UNCOMMITTED ; SELECT COUNT(Id) AS NumberOfFailedLoginAttemptAuditRecords, StatusBefore, StatusAfter FROM RegisteredUserAudits WHERE RegisteredUserId = {userId} AND Activity = 'Failed login attempt' LIMIT 1 ; SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ ;";
 
                 using (var cmd = new MySqlCommand(stm, con))
                 {
@@ -231,5 +224,11 @@ namespace Hublsoft.Net.LoginLogout.Api.Tests
             actualBeforeStatus.Should().Be(beforeStatus);
             actualAfterStatus.Should().Be(afterStatus);
         }
+
+        /*
+        NB: used https://bcrypt-generator.com/ to hash the valid password "test" and incorrect password "password"
+        TODO add unit tests for BLL  
+        TODO add next Gherkin test that takes user over the 3 failed login threshold, disables their account, with corresponding audit record
+        */
     }
 }

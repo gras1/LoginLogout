@@ -33,7 +33,7 @@ INSERT INTO RegisteredUsers (
 )
 VALUES (
     'test@test.com',
-    'test',
+    '$2a$12$Sk5hIdhfv9KKHbyWMUQYAuVaUgYxXVjf8n8PsW6scntb8xvMBseta',
     '2021-09-27 00:00:01',
     2,
     NULL,

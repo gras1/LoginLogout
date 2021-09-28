@@ -1,8 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
-using MySql;
-using MySql.Data;
 using MySql.Data.MySqlClient;
 
 namespace Hublsoft.Net.LoginLogout.DataAccess
@@ -13,13 +11,18 @@ namespace Hublsoft.Net.LoginLogout.DataAccess
 
         public async Task<int> GetIdByEmailAddressAsync(string emailAddress)
         {
+            if (string.IsNullOrEmpty(emailAddress))
+            {
+                throw new ArgumentException(nameof(emailAddress));
+            }
+
             var id = 0;
 
             using (var con = new MySqlConnection(base.ConnectionString))
             {
                 await con.OpenAsync();
 
-                string stm = $"SET SESSION TRANSACTION ISOLATION LEVEL READ UNCOMMITTED ; SELECT Id FROM RegisteredUsers WHERE EmailAddress = '{emailAddress}' LIMIT 1 ; SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ ;";
+                var stm = $"SET SESSION TRANSACTION ISOLATION LEVEL READ UNCOMMITTED ; SELECT Id FROM RegisteredUsers WHERE EmailAddress = '{emailAddress}' LIMIT 1 ; SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ ;";
 
                 using (var cmd = new MySqlCommand(stm, con))
                 {
@@ -41,13 +44,22 @@ namespace Hublsoft.Net.LoginLogout.DataAccess
 
         public async Task<UserAccountDetails> GetUserAccountDetailsAsync(int id, string password)
         {
+            if (id == 0)
+            {
+                throw new ArgumentException(nameof(id));
+            }
+            if (string.IsNullOrEmpty(password))
+            {
+                throw new ArgumentException(nameof(password));
+            }
+
             UserAccountDetails accountDetails = null;
 
             using (var con = new MySqlConnection(base.ConnectionString))
             {
                 await con.OpenAsync();
 
-                string stm = $"SET SESSION TRANSACTION ISOLATION LEVEL READ UNCOMMITTED ; SELECT PublicId, `Status`, LockedOutUntilDateTime, FailedLoginAttempts FROM RegisteredUsers WHERE Id = {id} AND HashedPassword = '{password}' LIMIT 1 ; SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ ;";
+                var stm = $"SET SESSION TRANSACTION ISOLATION LEVEL READ UNCOMMITTED ; SELECT PublicId, `Status`, LockedOutUntilDateTime, FailedLoginAttempts FROM RegisteredUsers WHERE Id = {id} AND HashedPassword = '{password}' LIMIT 1 ; SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ ;";
 
                 using (var cmd = new MySqlCommand(stm, con))
                 {
@@ -75,11 +87,15 @@ namespace Hublsoft.Net.LoginLogout.DataAccess
         
         public async Task IncrementFailedLoginAttemptsAsync(int id)
         {
+            if (id == 0)
+            {
+                throw new ArgumentException(nameof(id));
+            }
             using (var con = new MySqlConnection(base.ConnectionString))
             {
                 await con.OpenAsync();
 
-                string stm = $"UPDATE RegisteredUsers SET FailedLoginAttempts = FailedLoginAttempts + 1 WHERE Id = {id} ;";
+                var stm = $"UPDATE RegisteredUsers SET FailedLoginAttempts = FailedLoginAttempts + 1 WHERE Id = {id} ;";
 
                 using (var cmd = new MySqlCommand(stm, con))
                 {
