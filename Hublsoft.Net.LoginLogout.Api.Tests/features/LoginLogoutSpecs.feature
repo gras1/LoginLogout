@@ -20,8 +20,9 @@ Scenario: Authorised application calls authenticate method of user controller wi
 
 Scenario: Authorised application calls authenticate method of user controller
 	Given I am authorised
+	And The number of failed login attempts for user 1 is 0 and status is 2
 	When I post a request to authenticate with a valid email address and a valid but incorrect password
 	Then I expect to receive a 403 response
 	And The number of failed login attempts for user 1 is 1
-	And There are 1 failed login attempt audit records for user 1
+	And There is 1 failed login attempt audit record for user 1 where before status is 1 and after status is 1
 

@@ -37,11 +37,13 @@ Now to add references between the projects
 `dotnet add ./Hublsoft.Net.LoginLogout.Bll/Hublsoft.Net.LoginLogout.Bll.csproj reference ./Hublsoft.Net.LoginLogout.DataAccess/Hublsoft.Net.LoginLogout.DataAccess.csproj`
 `dotnet add ./Hublsoft.Net.LoginLogout.Bll/Hublsoft.Net.LoginLogout.Bll.csproj reference ./Hublsoft.Net.LoginLogout.Shared/Hublsoft.Net.LoginLogout.Shared.csproj`
 `dotnet add ./Hublsoft.Net.LoginLogout.Api/Hublsoft.Net.LoginLogout.Api.csproj reference ./Hublsoft.Net.LoginLogout.Bll/Hublsoft.Net.LoginLogout.Bll.csproj`
+`dotnet add ./Hublsoft.Net.LoginLogout.Api/Hublsoft.Net.LoginLogout.Api.csproj reference ./Hublsoft.Net.LoginLogout.DataAccess/Hublsoft.Net.LoginLogout.DataAccess.csproj`
 `dotnet add ./Hublsoft.Net.LoginLogout.Api/Hublsoft.Net.LoginLogout.Api.csproj reference ./Hublsoft.Net.LoginLogout.Shared/Hublsoft.Net.LoginLogout.Shared.csproj`
 `dotnet add ./Hublsoft.Net.LoginLogout.DataAccess.Tests/Hublsoft.Net.LoginLogout.DataAccess.Tests.csproj reference ./Hublsoft.Net.LoginLogout.DataAccess/Hublsoft.Net.LoginLogout.DataAccess.csproj`
 `dotnet add ./Hublsoft.Net.LoginLogout.Bll.Tests/Hublsoft.Net.LoginLogout.Bll.Tests.csproj reference ./Hublsoft.Net.LoginLogout.Bll/Hublsoft.Net.LoginLogout.Bll.csproj`
 `dotnet add ./Hublsoft.Net.LoginLogout.Bll.Tests/Hublsoft.Net.LoginLogout.Bll.Tests.csproj reference ./Hublsoft.Net.LoginLogout.Shared/Hublsoft.Net.LoginLogout.Shared.csproj`
 `dotnet add ./Hublsoft.Net.LoginLogout.Api.Tests/Hublsoft.Net.LoginLogout.Api.Tests.csproj reference ./Hublsoft.Net.LoginLogout.Api/Hublsoft.Net.LoginLogout.Api.csproj`
+`dotnet add ./Hublsoft.Net.LoginLogout.Api.Tests/Hublsoft.Net.LoginLogout.Api.Tests.csproj reference ./Hublsoft.Net.LoginLogout.DataAccess/Hublsoft.Net.LoginLogout.DataAccess.csproj`
 `dotnet add ./Hublsoft.Net.LoginLogout.Api.Tests/Hublsoft.Net.LoginLogout.Api.Tests.csproj reference ./Hublsoft.Net.LoginLogout.Shared/Hublsoft.Net.LoginLogout.Shared.csproj`
 
 Now to create a solution file and add the projects to it 
@@ -66,6 +68,8 @@ As part of the job spec and during the interview behaviour driven development wa
 `dotnet add package coverlet.collector`
 `dotnet add package FluentAssertions`
 `dotnet add package Microsoft.AspNetCore.Mvc.Testing`
+`dotnet add package MySql.Data`
+`dotnet add package Microsoft.Extensions.Configuration.Json`
 
 - coverlet.collector can be used to derive code coverage from tests
 - After some research about running BDD tests in .NET 5, the Xunit.Gherkin.Quick package seemed to do this fine without using something a full framework such as Specflow  
@@ -79,7 +83,13 @@ As part of the job spec and during the interview behaviour driven development wa
 
     <ItemGroup>
         <None Update="features\LoginLogoutSpecs.feature">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="appsettings.test.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
     </ItemGroup>
 
@@ -183,6 +193,13 @@ The Authenticate method has been stubbed out to return a new guid - this will be
 
 The 4th feature test requires me to implement the database and the data access and bll projects because I need to check it for the number of failed login attempts. This will mean that I need to add some unit tests as well. This all needs to be done from the "bottom upwards".
 
-- Run the script called "Setup and populate LoginLogout database.sql"
+- In the root folder, run the script called "Setup and populate LoginLogout database.sql"
 
-To be able to connect to the MySql database run `dotnet add package MySql.Data`
+
+### DataAccess project
+
+Now to get the DataAccess project ready:  
+
+`cd Hublsoft.Net.LoginLogout.DataAccess`
+`dotnet add package Microsoft.Extensions.Options`
+`dotnet add package MySql.Data`

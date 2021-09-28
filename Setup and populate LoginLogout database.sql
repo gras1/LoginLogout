@@ -9,7 +9,8 @@ CREATE TABLE RegisteredUsers (
     CreatedDateTime datetime NOT NULL,
     `Status` tinyint NOT NULL,
     LockedOutUntilDateTime datetime,
-    FailedLoginAttempts tinyint NOT NULL
+    FailedLoginAttempts tinyint NOT NULL,
+    PublicId BINARY(16) UNIQUE NOT NULL
 );
 
 CREATE TABLE RegisteredUserAudits (
@@ -27,7 +28,8 @@ INSERT INTO RegisteredUsers (
     CreatedDateTime,
     `Status`,
     LockedOutUntilDateTime,
-    FailedLoginAttempts
+    FailedLoginAttempts,
+    PublicId
 )
 VALUES (
     'test@test.com',
@@ -35,7 +37,8 @@ VALUES (
     '2021-09-27 00:00:01',
     2,
     NULL,
-    0
+    0,
+    UUID_TO_BIN(UUID())
 );
 
 INSERT INTO RegisteredUserAudits (
