@@ -1,30 +1,21 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using MySql;
-using MySql.Data;
-using MySql.Data.MySqlClient;
 using Swashbuckle.AspNetCore.Filters;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.IO;
-using System.Text;
-using System.Text.Json.Serialization;
+using Hublsoft.Net.LoginLogout.DataAccess;
+using Hublsoft.Net.LoginLogout.Bll;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Hublsoft.Net.LoginLogout.Api
 {
-    #pragma warning disable 1591
+    [ExcludeFromCodeCoverage]
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -34,7 +25,6 @@ namespace Hublsoft.Net.LoginLogout.Api
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
@@ -53,7 +43,17 @@ namespace Hublsoft.Net.LoginLogout.Api
             });
             services.AddSwaggerExamplesFromAssemblies(Assembly.GetEntryAssembly());
 
-            services.AddTransient<MySqlConnection>(_ => new MySqlConnection(Configuration["ConnectionStrings:Default"]));
+            services.Configure<DatabaseOptions>(Configuration.GetSection("DatabaseOptions"));
+            services.AddScoped<IRegisteredUsersRepository, RegisteredUsersRepository>();
+            services.AddScoped<IRegisteredUserAuditsRepository, RegisteredUserAuditsRepository>();
+            services.AddScoped<IUserManager, UserManager>();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(
+                    "Open",
+                    builder => builder.AllowAnyOrigin().AllowAnyHeader());
+            }); 
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -68,10 +68,10 @@ namespace Hublsoft.Net.LoginLogout.Api
                 });
             }
 
-            //app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            app.UseCors("Open");
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -80,5 +80,4 @@ namespace Hublsoft.Net.LoginLogout.Api
             });
         }
     }
-    #pragma warning restore 1591
 }
