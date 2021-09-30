@@ -9,5 +9,8 @@ namespace Hublsoft.Net.LoginLogout.DataAccess
         Task<UserAccountDetails> GetUserAccountDetailsAsync(int id, string password);
 
         Task IncrementFailedLoginAttemptsAsync(int id);
+
+        Task<int> GetFailedLoginAttempsAsync(int id);
+        Task LockAccount(int id);
     }
 }
