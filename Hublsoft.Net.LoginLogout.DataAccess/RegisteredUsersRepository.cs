@@ -105,5 +105,65 @@ namespace Hublsoft.Net.LoginLogout.DataAccess
                 await con.CloseAsync();
             }
         }
+
+        public async Task<int> GetFailedLoginAttempsAsync(int id)
+        {
+            if (id == 0)
+            {
+                throw new Exception("Id cannot be 0");
+            }
+
+            var attempCount = 0;
+
+            try
+            {
+                using (var con = new MySqlConnection(ConnectionString))
+                {
+                    await con.OpenAsync();
+
+                    var stm = $"SELECT FailedLoginAttempts FROM RegisteredUsers WHERE Id = {id} ;";
+
+                    using (var cmd = new MySqlCommand(stm, con))
+                    {
+                        attempCount = (int)cmd.ExecuteScalar();
+                    }
+
+                    await con.CloseAsync();
+                }
+            }
+            catch
+            {
+            }
+
+            return attempCount;
+        }
+
+        public async Task LockAccount(int id)
+        {
+            if (id == 0)
+            {
+                throw new ArgumentException(nameof(id));
+            }
+            using (var con = new MySqlConnection(ConnectionString))
+            {
+                await con.OpenAsync();
+
+                var stm = $"UPDATE RegisteredUsers SET Status = 1 WHERE Id = {id} ;";
+
+                using (var cmd = new MySqlCommand(stm, con))
+                {
+                    await cmd.ExecuteNonQueryAsync();
+                }
+
+                await con.CloseAsync();
+
+                var stm2 = $"UPDATE RegisteredUsers SET LockedOutUntilDateTime = '{DateTime.Now.AddDays(1):yyyy-MM-dd hh:mm:ss}' WHERE Id = {id} ;";
+
+                using (var cmd = new MySqlCommand(stm, con))
+                {
+                    await cmd.ExecuteNonQueryAsync();
+                }
+            }
+        }
     }
 }

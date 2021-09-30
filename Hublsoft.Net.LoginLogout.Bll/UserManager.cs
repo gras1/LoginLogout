@@ -42,6 +42,14 @@ namespace Hublsoft.Net.LoginLogout.Bll
                 tasks.Add(_registeredUsersRepo.IncrementFailedLoginAttemptsAsync(id));
                 tasks.Add(_registeredUserAuditsRepo.AddFailedLoginAttemptAuditRecordAsync(id));
                 await Task.WhenAll(tasks);
+
+                var loginAttempts = await _registeredUsersRepo.GetFailedLoginAttempsAsync(id);
+
+                if (loginAttempts == 3)
+                {
+                    await _registeredUsersRepo.LockAccount(id);
+                }
+
                 return Guid.Empty;
             }
             return userAccountDetails.PublicId;
